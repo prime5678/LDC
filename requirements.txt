@@ -2,3 +2,5 @@ pandas
 numpy
 matplotlib
 investpy
+scikit-learn
+scipy

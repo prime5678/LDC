@@ -42,3 +42,8 @@ def get_historical_data(ticker: str):
             end_date = "12/31/" + str(year + 2000)
     else:
         raise ValueError("Year in ticker must be between 3 and 29 inclusive.")
+    
+#Todo: 
+#Make sure to pull data using investpy
+#test the function for accuracy
+#create function to create spreads

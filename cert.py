@@ -34,9 +34,42 @@ plt.show()
 #print regression line R^2 value
 r2 = r2_score(sheet['CSCITLTL'], m*sheet['KC2 COMDTY'] + b)
 print(f'Linear Regression R^2 value: {r2:.4f}')
-
-#Optimize regression line by using trig function
-#Previous linear regression line will be downward trend line, use trig function to fith the data better
-#need an increasing function for periodicity (k = 2 * pi / period) as well as amplitude (A)
-#basic formula: y = A * sin(k * (x - x0)) + b
-#where x0 is the phase shift
+print(f'Regression line: y = {m:.4f}x + {b:.4f}')
+#Try using a polynomial regression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+# Create polynomial features
+poly = PolynomialFeatures(degree=5)
+X_poly = poly.fit_transform(sheet[['KC2 COMDTY']])
+# Fit polynomial regression model
+poly_model = LinearRegression()
+poly_model.fit(X_poly, sheet['CSCITLTL'])
+# Predict using the polynomial model
+y_poly_pred = poly_model.predict(X_poly)
+# Calculate R^2 score for polynomial regression
+r2_poly = r2_score(sheet['CSCITLTL'], y_poly_pred)
+print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+print(f'Polynomial Regression R^2 value: {r2_poly:.4f}')
+# Plot the polynomial regression line
+plt.scatter(sheet['KC2 COMDTY'], sheet['CSCITLTL'], alpha=
+0.5, label='Data Points')   
+plt.plot(sheet['KC2 COMDTY'], y_poly_pred, color='green', label='Polynomial Regression Line')
+plt.title('KC2 COMDTY vs CSCITLTL (Polynomial Regression)')
+plt.xlabel('KC2 COMDTY')
+plt.ylabel('CSCITLTL')
+plt.legend()
+plt.show()
+# Save the polynomial regression model coefficients
+coefficients = poly_model.coef_
+intercept = poly_model.intercept_
+print(f'Polynomial Regression Coefficients: {coefficients}')
+print(f'Polynomial Regression Intercept: {intercept:.4f}')
+#print closed form solution for polynomial regression
+print("Closed form solution for polynomial regression:")
+for i, coef in enumerate(coefficients):
+    if i == 0:
+        print(f'y = {intercept:.4f}', end=' ')
+    else:
+        print(f'+ {coef:.4f}x^{i}', end=' ')
+#try a curve fitting using scipy 
+print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")

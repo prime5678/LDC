@@ -17,33 +17,11 @@ model the activity of Arabica coffee future contracts.
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import investpy as ip
-import datetime as dt
-#since dealing with certs, each ticker always should start with 'KC'
-def get_historical_data(ticker: str):
-    if ticker[0:2] != 'KC':
-        raise ValueError("Ticker must start with 'KC' for Arabica coffee futures.")
-    valid_months = {'H': 3, 'K': 5, 'N': 7, 'U': 9, 'Z': 12}
-    if ticker[2] not in valid_months.keys():
-        raise ValueError(f"Invalid month code in ticker. Valid months are: {list(valid_months.keys())}")
-    #need to process the ticker to determine if the date falls before or after 2000 to get historical info
-    #only need about 25 years of data, so we can process dates that go maximum back to 2000
-    year = int(ticker[3:])
-    if year >= 3 and year <= 29:
-        #create the start date
-        if valid_months[ticker[2]] < 9:
-            start_date = "0" + str(valid_months[ticker[2]] + 1) + "/01/" + str(year + 1997)
-            end_date = "0" + str(valid_months[ticker[2]]) + "/30/" + str(year + 2000)
-        elif valid_months[ticker[2]] == 9:
-            start_date = str(valid_months[ticker[2]] + 1) + "/01/" + str(year + 1997)
-            end_date = "0" + str(valid_months[ticker[2]]) + "/30/" + str(year + 2000)
-        elif valid_months[ticker[2]] == 12:
-            start_date = "01/01/" + str(year + 1998)
-            end_date = "12/31/" + str(year + 2000)
-    else:
-        raise ValueError("Year in ticker must be between 3 and 29 inclusive.")
-    
-#Todo: 
-#Make sure to pull data using investpy
-#test the function for accuracy
-#create function to create spreads
+import blpapi
+from xbbg import blp
+
+#Create function to accept ticker and correctly place .csv files in directory
+#New directory is C:\Users\GREGOE\DOwnloads\LDC\LDCData\
+#Should store .csv files of future pricings from 2000 - 2025
+df = blp.bdp(tickers='NVDA US Equity', flds = ['Security_Name', 'GICS_Sector_Name'])
+print(df)
